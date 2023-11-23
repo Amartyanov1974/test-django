@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: djangoapp-clearsessions
+  namespace: edu-reverent-mestorf
+spec:
+  startingDeadlineSeconds: 15
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 100
+      template:
+        spec:
+          containers:
+            - name: djangoapp-clearsessions
+              image: amartyanov1974/test-django:v.1.0
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: djangoapp-config
+              command:
+                - python
+              args:
+                - manage.py
+                - clearsessions
+          restartPolicy: Never

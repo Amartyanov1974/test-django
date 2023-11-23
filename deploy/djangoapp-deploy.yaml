@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: djangoapp
+  namespace: edu-reverent-mestorf
+  labels:
+    app: djangoapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: djangoapp
+  template:
+    metadata:
+      labels:
+        app: djangoapp
+    spec:
+      containers:
+        - image: amartyanov1974/test-django:v.1.0
+          name: djangoapp
+          envFrom:
+            - configMapRef:
+                name: djangoapp-config
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: http
