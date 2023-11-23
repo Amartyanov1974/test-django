@@ -11,7 +11,8 @@
 docker build -t local-image:tagname .
 ```
 Создаем на [dockerhub](https://hub.docker.com/) репозиторий.<br>
-![Снимок экрана_2023-11-23_21-26-46](https://github.com/Amartyanov1974/test-django/assets/74543172/ed3db12a-830c-477f-a7f9-f634e23f80eb)
+![Снимок экрана_2023-11-23_21-26-46](https://github.com/Amartyanov1974/test-django/assets/74543172/08f074b2-d606-4db3-9b7a-cc815aacb002)
+
 
 Переименовываем образ:<br>
 ```
@@ -23,24 +24,39 @@ docker tag local-image:tagname new-repo:tagname
 docker login
 ```
 При первой авторизации будет запрос логина и пароля.<br>
-![Снимок экрана_2023-11-23_21-16-17](https://github.com/Amartyanov1974/test-django/assets/74543172/bc556082-ab56-471f-ba8f-95cb339bebc7)
+![Снимок экрана_2023-11-23_21-16-17](https://github.com/Amartyanov1974/test-django/assets/74543172/41faf354-9760-4eaa-a89d-d0bb39745a93)
+
 
 Запушим образ в репозиторий<br>
 ```
 docker push new-repo:tagname
 ```
+## Подключение к Yandex.Cloud
 
+Устанавливаем программное обеспечение для работы с Yandex.Cloud:
+```
+curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+```
+На [сайте](https://console.cloud.yandex.ru) находим свой ID<br>
 
-
+Подключаемся к облаку<br>
+```
+yc managed-kubernetes cluster get-credentials --id <Ваш_ID> --external
+```
 ## Установка
-Переходим в директорию deploy и разворачиваем проект:
+Переходим в директорию deploy.<br>
+Прописываем в djangoapp-configmap.yaml свои значения SECRET_KEY, DATABASE_URL и ALLOWED_HOSTS.
+
+Разворачиваем проект командой:
 
 ```
 kubectl apply -f ./
 ```
 
-Заходим по [ссылке](https://edu-reverent-mestorf.sirius-k8s.dvmn.org/admin)
-![Снимок экрана_2023-11-23_21-23-15](https://github.com/Amartyanov1974/test-django/assets/74543172/fc59a7da-6e06-4e8a-a58f-f356ff1fb6e3)
+Заходим по [ссылке](https://edu-reverent-mestorf.sirius-k8s.dvmn.org/admin) и наблюдаем свой сайт<br>
+
+![Снимок экрана_2023-11-23_21-23-15](https://github.com/Amartyanov1974/test-django/assets/74543172/6ae29299-a688-485a-afba-feac8d9bcb4a)
+
 
 ## Ссылка на описание выделенных ресурсов облачной инфраструктуры
 [Ссылка](https://sirius-env-registry.website.yandexcloud.net/edu-reverent-mestorf.html)
@@ -57,15 +73,6 @@ django-migrate.yaml - разовая задача для migrate.<br>
 
 ## Переменные окружения
 
-Переменные для образа postgresql:
-
-`POSTGRES_DB` -- имя базы данных.
-
-`POSTGRES_USER` -- пользователь базы данных.
-
-`POSTGRES_PASSWORD` -- пароль к базе данных.
-
-Переменные для образа с Django:
 
 `SECRET_KEY` -- обязательная секретная настройка Django. Это соль для генерации хэшей. Значение может быть любым, важно лишь, чтобы оно никому не было известно. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#secret-key).
 
